@@ -7,7 +7,9 @@ package it.polito.tdp.food;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.food.model.Food;
 import it.polito.tdp.food.model.Model;
+import it.polito.tdp.food.model.vicini;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -41,7 +43,7 @@ public class FoodController {
     private Button btnSimula; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxFood"
-    private ComboBox<?> boxFood; // Value injected by FXMLLoader
+    private ComboBox<Food> boxFood; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
@@ -49,13 +51,31 @@ public class FoodController {
     @FXML
     void doCreaGrafo(ActionEvent event) {
     	txtResult.clear();
-    	txtResult.appendText("Creazione grafo...");
+    	int x = 0;
+    	txtResult.appendText("Creazione grafo...\n");
+    	try {
+    		x = Integer.parseInt(txtPorzioni.getText());
+    	} catch (Exception e) {
+    		txtResult.appendText("inserire un numero di porzioni valido");
+    		return;
+    	}
+    	if (model.creaGrafo(x).vertexSet()==null) {
+    		txtResult.appendText("inserire un numero di porzioni esistente");
+    		return;
+    		}
+    	else {
+    		txtResult.appendText("grafo creato con "+model.creaGrafo(x).vertexSet().size()+" vertici e "+model.creaGrafo(x).edgeSet().size()+" archi\n");
+    		boxFood.getItems().addAll(model.creaGrafo(x).vertexSet());
+    	}
     }
     
     @FXML
     void doCalorie(ActionEvent event) {
     	txtResult.clear();
-    	txtResult.appendText("Analisi calorie...");
+    	txtResult.appendText("Analisi calorie...\n");
+    	for(vicini v : model.calorieMax(boxFood.getValue()))
+    		txtResult.appendText(v.toString()+"\n");
+    	
     }
 
     @FXML
