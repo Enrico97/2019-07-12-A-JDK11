@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.food.model.Food;
 import it.polito.tdp.food.model.Model;
+import it.polito.tdp.food.model.Simulator;
 import it.polito.tdp.food.model.vicini;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -81,7 +82,22 @@ public class FoodController {
     @FXML
     void doSimula(ActionEvent event) {
     	txtResult.clear();
-    	txtResult.appendText("Simulazione...");
+    	txtResult.appendText("Simulazione...\n");
+    	int k=0;
+    	try {
+    		k = Integer.parseInt(txtK.getText());
+    	} catch (NumberFormatException e) {
+    		txtResult.appendText("Errore nell'inserimento di k");
+    		return;
+    	}
+    	if (k<=10 && k>=1) {
+    		model.simula(model.creaGrafo(Integer.parseInt(txtPorzioni.getText())), boxFood.getValue(), Integer.parseInt(txtPorzioni.getText()), k);
+    		txtResult.appendText("sono stati preparati "+model.cibiPreparati()+" in "+model.tempoTotale()+" minuti");
+    	}
+    	else {
+    		txtResult.appendText("k deve essere un numero intero compreso tra 1 e 10");
+    		return;
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
